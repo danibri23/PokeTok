@@ -1,33 +1,74 @@
-// El estado de nuestro StateNotifier debe ser inmutable.
-// También podríamos usar paquetes como Freezed para ayudar con la implementación.
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:poketok/core/dependency_injection/locator.dart';
 import 'package:poketok/domain/models/pokemon_model.dart';
 import 'package:poketok/domain/repositories/pokemon_repository.dart';
 
-class AsyncPokemonNotifier extends AsyncNotifier<List<Pokemon>> {
-  final PokemonRepository _pokemonRepository;
+part 'pokemon_provider.g.dart';
 
-  AsyncPokemonNotifier(this._pokemonRepository);
+class PokemonStateNotifier {
+  final bool isLoading;
+  final List<Pokemon> pokemonList;
+  final List<Pokemon> favoritePokemonList;
+  final String errorMessage;
 
-  int counter = 1;
-  Future<List<Pokemon>> fetchPokemon() async {
-    final pokemons = await _pokemonRepository.getPokemon(counter);
-    counter = counter + 1;
-    return [pokemons];
-  }
+  PokemonStateNotifier({
+    required this.isLoading,
+    required this.pokemonList,
+    required this.favoritePokemonList,
+    this.errorMessage = '',
+  });
 
-  @override
-  Future<List<Pokemon>> build() async {
-    return fetchPokemon();
+  PokemonStateNotifier copyWith({
+    bool? isLoading,
+    List<Pokemon>? pokemonList,
+    List<Pokemon>? favoritePokemonList,
+    String? errorMessage,
+  }) {
+    return PokemonStateNotifier(
+      isLoading: isLoading ?? this.isLoading,
+      pokemonList: pokemonList ?? this.pokemonList,
+      favoritePokemonList: favoritePokemonList ?? this.favoritePokemonList,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
   }
 }
 
-// Finalmente, estamos usando StateNotifierProvider para permitir que la
-// interfaz de usuario interactúe con nuestra clase TodosNotifier.
-final asyncPokemonsProvider =
-    AsyncNotifierProvider<AsyncPokemonNotifier, List<Pokemon>>(() {
-  return AsyncPokemonNotifier(
-    locator<PokemonRepository>(),
-  );
-});
+@riverpod
+class Pokemons extends _$Pokemons {
+  late final PokemonRepository _pokemonRepository;
+
+  @override
+  PokemonStateNotifier build() {
+    _pokemonRepository = locator<PokemonRepository>();
+
+    return PokemonStateNotifier(
+      isLoading: false,
+      pokemonList: [],
+      favoritePokemonList: [],
+    );
+  }
+
+  Future<void> getPokemons([int amount = 3]) async {
+    if (state.isLoading) return;
+
+    try {
+      state = state.copyWith(isLoading: true);
+
+      final List<Pokemon> updatedPokemons = [];
+
+      for (int i = 1; i <= amount; i++) {
+        final int page = state.pokemonList.length + i;
+        final Pokemon newPokemon = await _pokemonRepository.getPokemons(page);
+        updatedPokemons.add(newPokemon);
+      }
+
+      state = state.copyWith(
+        pokemonList: [...state.pokemonList, ...updatedPokemons],
+        isLoading: false,
+      );
+    } catch (e) {
+      // log('Error al obtener páginas adicionales: $e');
+      state = state.copyWith(isLoading: false);
+    }
+  }
+}
