@@ -62,7 +62,7 @@ class _PokemonScreenState extends ConsumerState<PokemonScreen> {
               child: Padding(
                 padding: EdgeInsets.all(
                     24.0), // Puedes ajustar el valor según sea necesario
-                child: ListView.builder(
+                child: PageView.builder(
                   scrollDirection: Axis.vertical,
                   itemCount: pokemonProvider.length,
                   itemBuilder: (context, index) {

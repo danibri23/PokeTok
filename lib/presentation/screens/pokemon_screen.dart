@@ -7,8 +7,7 @@ import 'package:poketok/domain/models/pokemon_model.dart';
 import 'package:poketok/presentation/providers/pokemon_provider.dart';
 
 class PokemonScreen extends StatefulHookConsumerWidget {
-  const PokemonScreen({Key? key});
-
+  const PokemonScreen({super.key});
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PokemonScreenState();
 }
@@ -25,7 +24,7 @@ class _PokemonScreenState extends ConsumerState<PokemonScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       fetchPokemons();
     });
   }
@@ -60,9 +59,9 @@ class _PokemonScreenState extends ConsumerState<PokemonScreen> {
                 return true;
               },
               child: Padding(
-                padding: EdgeInsets.all(
+                padding: const EdgeInsets.all(
                     24.0), // Puedes ajustar el valor según sea necesario
-                child: ListView.builder(
+                child: PageView.builder(
                   scrollDirection: Axis.vertical,
                   itemCount: pokemonProvider.length,
                   itemBuilder: (context, index) {
@@ -75,7 +74,7 @@ class _PokemonScreenState extends ConsumerState<PokemonScreen> {
                           onPressed: () {
                             ref.read(pokemonsProvider.notifier);
                           },
-                          child: Text(
+                          child: const Text(
                             'Add to favorites',
                           ),
                         ),
@@ -91,9 +90,9 @@ class _PokemonScreenState extends ConsumerState<PokemonScreen> {
 
 class PokemonImage extends StatelessWidget {
   const PokemonImage({
-    Key? key,
+    super.key,
     required this.pokemon,
-  }) : super(key: key);
+  });
 
   final Pokemon pokemon;
 
@@ -105,9 +104,9 @@ class PokemonImage extends StatelessWidget {
 
 class PokemonTitle extends StatelessWidget {
   const PokemonTitle({
-    Key? key,
+    super.key,
     required this.pokemon,
-  }) : super(key: key);
+  });
 
   final Pokemon pokemon;
 
