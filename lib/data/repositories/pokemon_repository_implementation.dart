@@ -18,7 +18,6 @@ class PokemonRepositoryImplementation implements PokemonRepository {
   @override
   Future<Pokemon> getPokemons(int pokemonId) async {
     final response = await _httpService.dio.get('/pokemon/$pokemonId');
-    // log('Response: ${response.data}');
     return Pokemon.fromJson(response.data);
   }
 

@@ -22,11 +22,20 @@ class _PokemonScreenState extends ConsumerState<PokemonScreen> {
     }
   }
 
+  Future<void> fetchSavedPokemons() async {
+    try {
+      await ref.read(pokemonsProvider.notifier).getSavedPokemons();
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       fetchPokemons();
+      fetchSavedPokemons();
     });
   }
 
@@ -60,8 +69,7 @@ class _PokemonScreenState extends ConsumerState<PokemonScreen> {
                 return true;
               },
               child: Padding(
-                padding: const EdgeInsets.all(
-                    24.0), // Puedes ajustar el valor según sea necesario
+                padding: const EdgeInsets.all(24.0),
                 child: PageView.builder(
                   scrollDirection: Axis.vertical,
                   itemCount: pokemonProvider.length,

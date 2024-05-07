@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:poketok/core/dependency_injection/locator.dart';
 import 'package:poketok/domain/models/pokemon_model.dart';
@@ -79,12 +77,18 @@ class Pokemons extends _$Pokemons {
     state = state.copyWith(
       favoritePokemonList: [...state.favoritePokemonList, pokemon],
     );
-    log('Pokemons guardados: ${state.favoritePokemonList}');
   }
 
   void removeFavoritePokemon(int index) {
     _pokemonRepository.removeFavoritePokemon(index);
     state = state.copyWith(
         favoritePokemonList: state.favoritePokemonList..removeAt(index));
+  }
+
+  Future<void> getSavedPokemons() async {
+    final List<Pokemon?> savedPokemons =
+        await _pokemonRepository.getSavedPokemons();
+    state = state.copyWith(
+        favoritePokemonList: savedPokemons.whereType<Pokemon>().toList());
   }
 }
