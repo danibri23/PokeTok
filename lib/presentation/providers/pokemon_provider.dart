@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:poketok/core/dependency_injection/locator.dart';
 import 'package:poketok/domain/models/pokemon_model.dart';
@@ -72,7 +74,17 @@ class Pokemons extends _$Pokemons {
     }
   }
 
-  void removeFavoritePokemon(int index) {}
+  void addFavoritePokemon(Pokemon pokemon) {
+    _pokemonRepository.addFavoritePokemon(pokemon);
+    state = state.copyWith(
+      favoritePokemonList: [...state.favoritePokemonList, pokemon],
+    );
+    log('Pokemons guardados: ${state.favoritePokemonList}');
+  }
 
-  void addFavoritePokemon(Pokemon pokemon) {}
+  void removeFavoritePokemon(int index) {
+    _pokemonRepository.removeFavoritePokemon(index);
+    state = state.copyWith(
+        favoritePokemonList: state.favoritePokemonList..removeAt(index));
+  }
 }
