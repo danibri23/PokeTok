@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:poketok/core/services/http_client.dart';
 import 'package:poketok/core/services/shared_preferences_service.dart';
@@ -37,6 +36,13 @@ class PokemonRepositoryImplementation implements PokemonRepository {
     final pokemonString = jsonEncode(pokemonJson);
     final savedPokemons = await _sharedPreferencesService.getSavedPokemons();
     savedPokemons.add(pokemonString);
+    await _sharedPreferencesService.setSavedPokemons(savedPokemons);
+  }
+
+  @override
+  void removeFavoritePokemon(int index) async {
+    final savedPokemons = await _sharedPreferencesService.getSavedPokemons();
+    savedPokemons.removeAt(index);
     await _sharedPreferencesService.setSavedPokemons(savedPokemons);
   }
 }

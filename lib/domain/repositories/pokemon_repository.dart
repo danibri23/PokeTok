@@ -4,4 +4,5 @@ abstract class PokemonRepository {
   Future<Pokemon> getPokemons(int pokemonId);
   Future<List<Pokemon?>> getSavedPokemons();
   void addFavoritePokemon(Pokemon pokemon);
+  void removeFavoritePokemon(int index);
 }
