@@ -71,4 +71,8 @@ class Pokemons extends _$Pokemons {
       state = state.copyWith(isLoading: false);
     }
   }
+
+  void removeFavoritePokemon(int index) {}
+
+  void addFavoritePokemon(Pokemon pokemon) {}
 }

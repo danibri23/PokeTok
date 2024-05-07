@@ -3,14 +3,14 @@ import 'package:poketok/presentation/screens/screens.dart';
 
 class Router {
   static const pokemon = '/pokemon';
-  static const favorito = '/favorito';
+  static const favoritos = '/favoritos';
 
   static Route<dynamic>? generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case pokemon:
         return MaterialPageRoute(builder: (_) => const PokemonScreen());
-      case favorito:
-        return MaterialPageRoute(builder: (_) => const FavoriteScreen());
+      case favoritos:
+        return MaterialPageRoute(builder: (_) => const FavoritesScreen());
 
       default:
         return null;

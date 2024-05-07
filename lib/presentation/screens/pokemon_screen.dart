@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:poketok/domain/models/pokemon_model.dart';
 import 'package:poketok/presentation/providers/pokemon_provider.dart';
+import 'package:poketok/presentation/screens/favorites_screen.dart';
 
 class PokemonScreen extends StatefulHookConsumerWidget {
   const PokemonScreen({super.key});
@@ -41,7 +42,7 @@ class _PokemonScreenState extends ConsumerState<PokemonScreen> {
           IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              // Navigator.of(context).pushNamed(FavoritesScreen.name);
+              Navigator.of(context).pushNamed(FavoritesScreen.name);
             },
           ),
         ],
@@ -72,7 +73,9 @@ class _PokemonScreenState extends ConsumerState<PokemonScreen> {
                         PokemonImage(pokemon: pokemon),
                         ElevatedButton(
                           onPressed: () {
-                            ref.read(pokemonsProvider.notifier);
+                            ref
+                                .read(pokemonsProvider.notifier)
+                                .addFavoritePokemon(pokemon);
                           },
                           child: const Text(
                             'Add to favorites',
