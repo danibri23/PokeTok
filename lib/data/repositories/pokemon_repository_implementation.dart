@@ -30,4 +30,13 @@ class PokemonRepositoryImplementation implements PokemonRepository {
     final savedPokemonsJson = savedPokemonsString.map((e) => jsonDecode(e));
     return savedPokemonsJson.map((e) => Pokemon.fromLocalJson(e)).toList();
   }
+
+  @override
+  void addFavoritePokemon(Pokemon pokemon) async {
+    final pokemonJson = pokemon.toJson();
+    final pokemonString = jsonEncode(pokemonJson);
+    final savedPokemons = await _sharedPreferencesService.getSavedPokemons();
+    savedPokemons.add(pokemonString);
+    await _sharedPreferencesService.setSavedPokemons(savedPokemons);
+  }
 }
