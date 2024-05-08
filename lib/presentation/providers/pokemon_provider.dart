@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:poketok/core/dependency_injection/locator.dart';
 import 'package:poketok/domain/models/pokemon_model.dart';
@@ -50,9 +52,11 @@ class Pokemons extends _$Pokemons {
 
   Future<void> getPokemons([int amount = 3]) async {
     if (state.isLoading) return;
+    log(state.isLoading.toString());
 
     try {
       state = state.copyWith(isLoading: true);
+      log(state.isLoading.toString());
 
       final List<Pokemon> updatedPokemons = [];
 
@@ -60,12 +64,16 @@ class Pokemons extends _$Pokemons {
         final int page = state.pokemonList.length + i;
         final Pokemon newPokemon = await _pokemonRepository.getPokemons(page);
         updatedPokemons.add(newPokemon);
+        log('Pokemon obtenido: ${newPokemon.name}');
       }
 
       state = state.copyWith(
         pokemonList: [...state.pokemonList, ...updatedPokemons],
         isLoading: false,
       );
+      log(state.isLoading.toString());
+
+      log('Pokemons obtenidos: $updatedPokemons');
     } catch (e) {
       // log('Error al obtener páginas adicionales: $e');
       state = state.copyWith(isLoading: false);
