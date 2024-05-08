@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:poketok/domain/models/pokemon_model.dart';
@@ -45,7 +47,6 @@ class _PokemonScreenState extends ConsumerState<PokemonScreen> {
     // log(pokemonProvider[7].types[0].typeName);
 
     return Scaffold(
-      backgroundColor: Colors.green,
       body: pokemonProvider.isEmpty
           ? const Center(
               child: CircularProgressIndicator(),
@@ -58,31 +59,32 @@ class _PokemonScreenState extends ConsumerState<PokemonScreen> {
                 }
                 return true;
               },
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: PageView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: pokemonProvider.length,
-                  itemBuilder: (context, index) {
-                    final pokemon = pokemonProvider[index];
-                    return Column(
+              child: PageView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: pokemonProvider.length,
+                itemBuilder: (context, index) {
+                  final pokemon = pokemonProvider[index];
+                  return Scaffold(
+                    backgroundColor: ref
+                        .watch(pokemonsProvider.notifier)
+                        .getColorsByType(pokemon.types[0].typeName),
+                    body: Stack(
                       children: [
-                        const PokemonHeader(),
-                        PokemonTitle(pokemon: pokemon),
-                        Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            ContainerStats(pokemon: pokemon),
-                            Positioned(
-                              bottom: 0,
-                              child: PokemonImage(pokemon: pokemon),
-                            ),
-                          ],
-                        )
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            children: [
+                              const PokemonHeader(),
+                              PokemonTitle(pokemon: pokemon),
+                              PokemonImage(pokemon: pokemon),
+                              ContainerStats(pokemon: pokemon)
+                            ],
+                          ),
+                        ),
                       ],
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ),
     );
@@ -95,7 +97,7 @@ class PokemonHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.green,
+      backgroundColor: Colors.transparent,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -164,7 +166,7 @@ class PokemonTitle extends StatelessWidget {
   }
 }
 
-class ContainerStats extends StatelessWidget {
+class ContainerStats extends ConsumerWidget {
   const ContainerStats({
     super.key,
     required this.pokemon,
@@ -173,7 +175,7 @@ class ContainerStats extends StatelessWidget {
   final Pokemon pokemon;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -212,9 +214,12 @@ class ContainerStats extends StatelessWidget {
                               // Primer contenedor
                               child: Container(
                                 height: 50,
-                                decoration: const BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.all(
+                                decoration: BoxDecoration(
+                                  color: ref
+                                      .watch(pokemonsProvider.notifier)
+                                      .getColorsByType(
+                                          pokemon.types[0].typeName),
+                                  borderRadius: const BorderRadius.all(
                                     Radius.circular(6),
                                   ),
                                 ),
@@ -243,7 +248,6 @@ class ContainerStats extends StatelessWidget {
                           ],
                         ),
                       ),
-                      // SizedBox(width: 6), // Espacio horizontal de 20 unidades
                       Container(
                         height: 50,
                         width: 140,
@@ -262,15 +266,18 @@ class ContainerStats extends StatelessWidget {
                               // Primer contenedor
                               child: Container(
                                 height: 50,
-                                decoration: const BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.all(
+                                decoration: BoxDecoration(
+                                  color: ref
+                                      .watch(pokemonsProvider.notifier)
+                                      .getColorsByType(
+                                          pokemon.types[0].typeName),
+                                  borderRadius: const BorderRadius.all(
                                     Radius.circular(6),
                                   ),
                                 ),
                                 alignment: Alignment.center,
                                 child: const Text(
-                                  'Ataque',
+                                  'Defensa',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 14,
@@ -282,7 +289,7 @@ class ContainerStats extends StatelessWidget {
                             Expanded(
                               // Segundo contenedor
                               child: Text(
-                                pokemon.stats[1].baseStat.toString(),
+                                pokemon.stats[2].baseStat.toString(),
                                 style: TextStyle(
                                     color: Colors.grey.shade500,
                                     fontSize: 16,
@@ -295,7 +302,6 @@ class ContainerStats extends StatelessWidget {
                       ),
                     ],
                   ),
-                  // const SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -317,15 +323,18 @@ class ContainerStats extends StatelessWidget {
                               // Primer contenedor
                               child: Container(
                                 height: 50,
-                                decoration: const BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.all(
+                                decoration: BoxDecoration(
+                                  color: ref
+                                      .watch(pokemonsProvider.notifier)
+                                      .getColorsByType(
+                                          pokemon.types[0].typeName),
+                                  borderRadius: const BorderRadius.all(
                                     Radius.circular(6),
                                   ),
                                 ),
                                 alignment: Alignment.center,
                                 child: const Text(
-                                  'Ataque',
+                                  'HP',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 14,
@@ -337,7 +346,7 @@ class ContainerStats extends StatelessWidget {
                             Expanded(
                               // Segundo contenedor
                               child: Text(
-                                pokemon.stats[1].baseStat.toString(),
+                                pokemon.stats[0].baseStat.toString(),
                                 style: TextStyle(
                                     color: Colors.grey.shade500,
                                     fontSize: 16,
@@ -360,8 +369,13 @@ class ContainerStats extends StatelessWidget {
                           ),
                         ),
                         child: Center(
-                          child: Text('Tipo: ${pokemon.stats[2].baseStat}'),
-                        ),
+                            child: Text(
+                          'Tipo: ${pokemon.types[0].typeName.substring(0, 1).toUpperCase()}${pokemon.types[0].typeName.substring(1)}',
+                          style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        )),
                       ),
                     ],
                   ),
@@ -371,7 +385,11 @@ class ContainerStats extends StatelessWidget {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  ref
+                      .read(pokemonsProvider.notifier)
+                      .addFavoritePokemon(pokemon);
+                },
                 style: ButtonStyle(
                   backgroundColor:
                       MaterialStateProperty.all(Colors.grey.shade800),
