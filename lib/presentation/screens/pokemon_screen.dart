@@ -71,8 +71,9 @@ class _PokemonScreenState extends ConsumerState<PokemonScreen> {
                     body: Stack(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(12.0),
+                          padding: const EdgeInsets.all(24.0),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const PokemonHeader(),
                               PokemonTitle(pokemon: pokemon),
@@ -96,27 +97,33 @@ class PokemonHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          const Text(
-            'Mis Favoritos',
-            style: TextStyle(
-              fontSize: 20,
-              letterSpacing: -1.0,
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, FavoritesScreen.name);
+      },
+      child: const Padding(
+        padding: EdgeInsets.only(top: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              'Mis Favoritos',
+              style: TextStyle(
+                fontSize: 20,
+                letterSpacing: -1.0,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(
+              width: 8,
+            ),
+            Icon(
+              Icons.favorite_border,
+              size: 28,
               color: Colors.white,
             ),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, FavoritesScreen.name);
-            },
-            icon: const Icon(Icons.favorite_border,
-                size: 28, color: Colors.white),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -132,7 +139,10 @@ class PokemonImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(pokemon.sprite, height: 200, width: 200);
+    return Image.network(
+      pokemon.sprite,
+      height: 300,
+    );
   }
 }
 
@@ -155,11 +165,13 @@ class PokemonTitle extends StatelessWidget {
             style: const TextStyle(color: Colors.white),
           ),
           Text(
-              '${pokemon.name.substring(0, 1).toUpperCase()}${pokemon.name.substring(1)}',
-              style: const TextStyle(
-                  fontSize: 36,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold)),
+            '${pokemon.name.substring(0, 1).toUpperCase()}${pokemon.name.substring(1)}',
+            style: const TextStyle(
+              fontSize: 36,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );
@@ -184,13 +196,13 @@ class ContainerStats extends ConsumerWidget {
         ),
       ),
       child: SizedBox(
-        height: 260,
         width: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16.0),
+            const SizedBox(height: 60),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
               child: Column(
                 children: [
                   Row(
@@ -211,7 +223,6 @@ class ContainerStats extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Expanded(
-                              // Primer contenedor
                               child: Container(
                                 height: 50,
                                 decoration: BoxDecoration(
@@ -235,7 +246,6 @@ class ContainerStats extends ConsumerWidget {
                               ),
                             ),
                             Expanded(
-                              // Segundo contenedor
                               child: Text(
                                 pokemon.stats[1].baseStat.toString(),
                                 style: TextStyle(
@@ -287,7 +297,6 @@ class ContainerStats extends ConsumerWidget {
                               ),
                             ),
                             Expanded(
-                              // Segundo contenedor
                               child: Text(
                                 pokemon.stats[2].baseStat.toString(),
                                 style: TextStyle(
@@ -301,6 +310,9 @@ class ContainerStats extends ConsumerWidget {
                         ),
                       ),
                     ],
+                  ),
+                  const SizedBox(
+                    height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -320,7 +332,6 @@ class ContainerStats extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Expanded(
-                              // Primer contenedor
                               child: Container(
                                 height: 50,
                                 decoration: BoxDecoration(
@@ -369,21 +380,23 @@ class ContainerStats extends ConsumerWidget {
                           ),
                         ),
                         child: Center(
-                            child: Text(
-                          'Tipo: ${pokemon.types[0].typeName.substring(0, 1).toUpperCase()}${pokemon.types[0].typeName.substring(1)}',
-                          style: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        )),
+                          child: Text(
+                            'Tipo: ${pokemon.types[0].typeName.substring(0, 1).toUpperCase()}${pokemon.types[0].typeName.substring(1)}',
+                            style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16.0),
+            Padding(
+              padding:
+                  const EdgeInsets.fromLTRB(16, 0, 16, 16), // 16px top padding
               child: ElevatedButton(
                 onPressed: () {
                   ref
