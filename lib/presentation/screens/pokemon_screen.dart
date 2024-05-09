@@ -68,21 +68,19 @@ class _PokemonScreenState extends ConsumerState<PokemonScreen> {
                     backgroundColor: ref
                         .watch(pokemonsProvider.notifier)
                         .getColorsByType(pokemon.types[0].typeName),
-                    body: Stack(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(24.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const PokemonHeader(),
-                              PokemonTitle(pokemon: pokemon),
-                              PokemonImage(pokemon: pokemon),
-                              ContainerStats(pokemon: pokemon)
-                            ],
+                    body: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const PokemonHeader(),
+                          PokemonTitle(pokemon: pokemon),
+                          PokemonImage(
+                            pokemon: pokemon,
                           ),
-                        ),
-                      ],
+                          ContainerStats(pokemon: pokemon),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -140,8 +138,9 @@ class PokemonImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.network(
+      height: MediaQuery.of(context).size.height * 0.40,
+      fit: BoxFit.cover,
       pokemon.sprite,
-      height: 300,
     );
   }
 }
@@ -200,7 +199,9 @@ class ContainerStats extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const SizedBox(height: 60),
+            const SizedBox(
+              height: 30,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Column(
