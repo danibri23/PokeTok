@@ -36,5 +36,13 @@ flutter pub get
 flutter run
 ```
 
+## Screenshots
 
+![poketok-1](https://github.com/danibri23/PokeTok/assets/99504070/ad47c5d7-4f48-4e56-a56c-688d080aef6c)
+
+![poketok-2](https://github.com/danibri23/PokeTok/assets/99504070/10753b68-0c8d-41fa-8d05-0d5d1d4f7791)
+
+![poketok-3](https://github.com/danibri23/PokeTok/assets/99504070/d155055e-be55-4665-8e60-4ef5974804ce)
+
+![poketok-4](https://github.com/danibri23/PokeTok/assets/99504070/7d716ab2-3b71-4363-a8a7-1962a89693ec)
 
