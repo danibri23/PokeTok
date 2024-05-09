@@ -15,6 +15,8 @@ class PokemonScreen extends StatefulHookConsumerWidget {
 }
 
 class _PokemonScreenState extends ConsumerState<PokemonScreen> {
+  final PageController _pageController = PageController();
+
   Future<void> fetchPokemons() async {
     try {
       await ref.read(pokemonsProvider.notifier).getPokemons();
@@ -43,47 +45,43 @@ class _PokemonScreenState extends ConsumerState<PokemonScreen> {
   @override
   Widget build(BuildContext context) {
     final pokemonProvider = ref.watch(pokemonsProvider).pokemonList;
-    // log(pokemonProvider[7].types[0].typeName);
 
     return Scaffold(
       body: pokemonProvider.isEmpty
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : NotificationListener<ScrollNotification>(
-              onNotification: (ScrollNotification scrollInfo) {
-                if (scrollInfo.metrics.pixels ==
-                    scrollInfo.metrics.maxScrollExtent) {
+          : PageView.builder(
+              controller: _pageController,
+              scrollDirection: Axis.vertical,
+              onPageChanged: (index) {
+                if ((pokemonProvider.length - 3) == index) {
                   fetchPokemons();
                 }
-                return true;
               },
-              child: PageView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: pokemonProvider.length,
-                itemBuilder: (context, index) {
-                  final pokemon = pokemonProvider[index];
-                  return Scaffold(
-                    backgroundColor: ref
-                        .watch(pokemonsProvider.notifier)
-                        .getColorsByType(pokemon.types[0].typeName),
-                    body: Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const PokemonHeader(),
-                          PokemonTitle(pokemon: pokemon),
-                          PokemonImage(
-                            pokemon: pokemon,
-                          ),
-                          ContainerStats(pokemon: pokemon),
-                        ],
-                      ),
+              itemCount: pokemonProvider.length,
+              itemBuilder: (context, index) {
+                final pokemon = pokemonProvider[index];
+                return Scaffold(
+                  backgroundColor: ref
+                      .watch(pokemonsProvider.notifier)
+                      .getColorsByType(pokemon.types[0].typeName),
+                  body: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const PokemonHeader(),
+                        PokemonTitle(pokemon: pokemon),
+                        PokemonImage(
+                          pokemon: pokemon,
+                        ),
+                        ContainerStats(pokemon: pokemon),
+                      ],
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
     );
   }

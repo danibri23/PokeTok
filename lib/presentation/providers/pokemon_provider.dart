@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:poketok/core/dependency_injection/locator.dart';
@@ -51,13 +49,11 @@ class Pokemons extends _$Pokemons {
     );
   }
 
-  Future<void> getPokemons([int amount = 3]) async {
+  Future<void> getPokemons([int amount = 5]) async {
     if (state.isLoading) return;
-    log(state.isLoading.toString());
 
     try {
       state = state.copyWith(isLoading: true);
-      log(state.isLoading.toString());
 
       final List<Pokemon> updatedPokemons = [];
 
@@ -65,25 +61,20 @@ class Pokemons extends _$Pokemons {
         final int page = state.pokemonList.length + i;
         final Pokemon newPokemon = await _pokemonRepository.getPokemons(page);
         updatedPokemons.add(newPokemon);
-        log('Pokemon obtenido: ${newPokemon.name}');
       }
 
       state = state.copyWith(
         pokemonList: [...state.pokemonList, ...updatedPokemons],
         isLoading: false,
       );
-      log(state.isLoading.toString());
-
-      log('Pokemons obtenidos: $updatedPokemons');
     } catch (e) {
-      // log('Error al obtener páginas adicionales: $e');
       state = state.copyWith(isLoading: false);
     }
   }
 
   void addFavoritePokemon(Pokemon pokemon, context) {
     if (state.favoritePokemonList.contains(pokemon)) {
-      mostrarSnackbar(
+      showMessage(
         mensaje: '¡Este Pokémon ya está en tu lista de favoritos!',
         context: context,
       );
@@ -92,7 +83,7 @@ class Pokemons extends _$Pokemons {
       state = state.copyWith(
         favoritePokemonList: [...state.favoritePokemonList, pokemon],
       );
-      mostrarSnackbar(
+      showMessage(
         mensaje:
             '¡${pokemon.name.toUpperCase()} ha sido añadido a tus favoritos!',
         context: context,
@@ -100,7 +91,7 @@ class Pokemons extends _$Pokemons {
     }
   }
 
-  void mostrarSnackbar({required String mensaje, required context}) {
+  void showMessage({required String mensaje, required context}) {
     final snackbar = SnackBar(
       content: Text(mensaje),
       duration: const Duration(seconds: 1),
