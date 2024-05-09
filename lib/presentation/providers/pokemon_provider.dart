@@ -81,10 +81,36 @@ class Pokemons extends _$Pokemons {
     }
   }
 
-  void addFavoritePokemon(Pokemon pokemon) {
-    _pokemonRepository.addFavoritePokemon(pokemon);
-    state = state.copyWith(
-      favoritePokemonList: [...state.favoritePokemonList, pokemon],
+  void addFavoritePokemon(Pokemon pokemon, context) {
+    if (state.favoritePokemonList.contains(pokemon)) {
+      mostrarSnackbar(
+        mensaje: '¡Este Pokémon ya está en tu lista de favoritos!',
+        context: context,
+      );
+    } else {
+      _pokemonRepository.addFavoritePokemon(pokemon);
+      state = state.copyWith(
+        favoritePokemonList: [...state.favoritePokemonList, pokemon],
+      );
+      mostrarSnackbar(
+        mensaje:
+            '¡${pokemon.name.toUpperCase()} ha sido añadido a tus favoritos!',
+        context: context,
+      );
+    }
+  }
+
+  void mostrarSnackbar({required String mensaje, required context}) {
+    final snackbar = SnackBar(
+      content: Text(mensaje),
+      duration: const Duration(seconds: 1),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(
+      snackbar,
     );
   }
 

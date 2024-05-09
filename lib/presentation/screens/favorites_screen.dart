@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:poketok/presentation/providers/pokemon_provider.dart';
@@ -76,6 +75,8 @@ class FavoritesScreen extends ConsumerWidget {
                                   ref
                                       .read(pokemonsProvider.notifier)
                                       .removeFavoritePokemon(index);
+
+                                  showSnackbar(context);
                                 },
                               ),
                             ),
@@ -89,4 +90,18 @@ class FavoritesScreen extends ConsumerWidget {
             ),
     );
   }
+}
+
+void showSnackbar(BuildContext context) {
+  final snackbar = SnackBar(
+    content: const Text('¡Pokemon eliminado!'),
+    duration: const Duration(seconds: 1),
+    behavior: SnackBarBehavior.floating,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+  );
+  ScaffoldMessenger.of(context).showSnackBar(
+    snackbar,
+  );
 }

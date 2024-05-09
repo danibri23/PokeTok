@@ -1,10 +1,9 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:poketok/domain/models/pokemon_model.dart';
 import 'package:poketok/presentation/providers/pokemon_provider.dart';
 import 'package:poketok/presentation/screens/favorites_screen.dart';
@@ -199,9 +198,6 @@ class ContainerStats extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const SizedBox(
-              height: 30,
-            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Column(
@@ -402,7 +398,7 @@ class ContainerStats extends ConsumerWidget {
                 onPressed: () {
                   ref
                       .read(pokemonsProvider.notifier)
-                      .addFavoritePokemon(pokemon);
+                      .addFavoritePokemon(pokemon, context);
                 },
                 style: ButtonStyle(
                   backgroundColor:

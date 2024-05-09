@@ -1,17 +1,27 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:poketok/core/dependency_injection/locator.dart';
 import 'package:poketok/core/routes/app_routes.dart' as router;
 
-Future<void> main() async {
+void main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  setupLocator();
   runApp(
     const ProviderScope(
       child: MainApp(),
     ),
   );
-  setupLocator();
+  await Future.delayed(
+    const Duration(seconds: 6),
+    () {
+      FlutterNativeSplash.remove();
+    },
+  );
 }
 
 class MainApp extends StatelessWidget {
