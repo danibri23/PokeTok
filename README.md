@@ -19,7 +19,7 @@ Instrucciones para instalar y configurar el proyecto localmente. Incluye todos l
 
 ```bash
 # Clonar el repositorio
-git clone <https://github.com/danibri23/PokeTok>
+git clone https://github.com/danibri23/PokeTok
 
 # Instalar dependencias
 flutter pub get
